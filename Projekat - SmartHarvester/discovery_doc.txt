@@ -1,0 +1,35 @@
+server koji slusa na nekom portu
+Server je izvor gps-a (manje bitan)
+
+clienti KOMBAJN
+	SENZORI   - camera, ultrasonicni senzor, imu senzor, enkoder, 
+	AKTUATORI - motor, servo (command_feedback bude slan nazad svaki put kada se pobudi kretanje automobila.), 
+
+	KOMBAJN MORA DA OBAVESTAVA SERVER (GAZEBO) O SVOME UPRAVLJANJU.
+
+	JSON:
+		poruka {
+			id : int (reg broj)
+			ip : addr
+			manual : T/F
+			aktuatori : { 
+				# definisi sve moguce aktuatore
+				# ako neki kombajn ne poseduje taj aktuator ostavi polje prazno
+				# ali definsano
+			}
+			senzori : { # same }
+			command : {
+				# teme komunikace izmedji klijenta i servera koje nisu nuzno vezane
+				# za aktuatore i senzore direktno.
+			}
+		}
+
+
+Refaktorisanje Discovery Protokola: 
+	1. Ovde cu kratko opisati kako je zamisljeno povezivanje klijenta i servera:
+		a. Server obavestava o svom postojanju klijente;
+		b. Klijent kada ovo sazna posalje poruku za uspostavljanje veze, preko novog (tcp/udp) socketa. Bitno pitanje je
+		novi port ili ne.
+		c. Odrzavanje veze se zasniva na specijalnom portu na kome ce se klijent izjasnjavati. O ovom portu se moraju
+		dogovoriti unapred u im alive poruci ili da ovaj portu bude deljeni podatak izmedju servera i clienta
+		d. Publish subscribe metodologija na zasebnom threadu se zapocinje nakon discovery protocola
